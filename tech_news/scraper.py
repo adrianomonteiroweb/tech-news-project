@@ -1,6 +1,20 @@
+import requests as req
+import time
+
+
 # Requisito 1
 def fetch(url):
-    """Seu código deve vir aqui"""
+    try:
+        res = req.get(url, timeout=5).raise_for_status()
+    except (req.HTTPError, req.ReadTimeout):
+        return None
+
+    time.sleep(2)
+
+    return res.text
+
+# https://www.geeksforgeeks.org/response-raise_for_status-python-requests/
+# https://realpython.com/python-sleep/
 
 
 # Requisito 2
