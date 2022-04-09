@@ -1,5 +1,6 @@
 import requests as req
 import time
+from parsel import Selector
 
 
 # Requisito 1
@@ -19,7 +20,10 @@ def fetch(url):
 
 # Requisito 2
 def scrape_novidades(html_content):
-    """Seu código deve vir aqui"""
+    div_selector = "div.tec--card__info h3 a::attr(href)"
+    return Selector(html_content).css(div_selector).getall()
+
+# https://github.com/scrapy/parsel
 
 
 # Requisito 3
