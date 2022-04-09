@@ -32,9 +32,52 @@ def scrape_next_page_link(html_content):
     return Selector(html_content).css(button_selector).get()
 
 
+def scrap(selector, context):
+    return context.css(selector).get()
+
+
+def scrap_all(selector, context):
+    return context.css(selector).getall()
+
+
 # Requisito 4
 def scrape_noticia(html_content):
-    """Seu código deve vir aqui"""
+    context = Selector(html_content)
+
+    obj = {}
+
+    obj["url"] = scrap('head link[rel="canonical"]::attr(href)', context)
+    obj["title"] = scrap(".tec--article__header__title::text", context)
+    obj["timestamp"] = scrap("#js-article-date::attr(datetime)", context)
+
+    writer = scrap(".z--font-bold *::text", context)
+    obj["writer"] = writer.strip() if writer else None
+
+    raw_shares = scrap(".tec--toolbar__item::text", context)
+    if (raw_shares):
+        obj["shares_count"] = int(raw_shares.split(" ")[1])
+    else:
+        obj["shares_count"] = 0
+
+    raw_comments_count = scrap("#js-comments-btn::attr(data-count)", context)
+    if (raw_comments_count):
+        obj["comments_count"] = int(raw_comments_count)
+    else:
+        obj["comments_count"] = 0
+
+    summary = scrap_all(
+        "div.tec--article__body > p:nth-child(1) *::text",
+        context
+    )
+    obj["summary"] = "".join(summary)
+
+    raw_sources = scrap_all(".z--mb-16 div a::text", context)
+    obj["sources"] = [source.strip() for source in raw_sources]
+
+    raw_categories = scrap_all("#js-categories a::text", context)
+    obj["categories"] = [category.strip() for category in raw_categories]
+
+    return obj
 
 
 # Requisito 5
