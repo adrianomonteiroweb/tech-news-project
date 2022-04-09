@@ -5,13 +5,13 @@ import time
 # Requisito 1
 def fetch(url):
     try:
-        res = req.get(url, timeout=5).raise_for_status()
-    except (req.HTTPError, req.ReadTimeout):
+        time.sleep(1)
+        res = req.get(url, timeout=3)
+        res.raise_for_status()
+    except (req.HTTPError, req.Timeout):
         return None
-
-    time.sleep(2)
-
-    return res.text
+    else:
+        return res.text
 
 # https://www.geeksforgeeks.org/response-raise_for_status-python-requests/
 # https://realpython.com/python-sleep/
