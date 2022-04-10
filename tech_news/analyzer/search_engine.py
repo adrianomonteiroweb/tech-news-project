@@ -34,9 +34,21 @@ def search_by_date(date):
 
 # Requisito 8
 def search_by_source(source):
-    """Seu código deve vir aqui"""
+    news = []
+    for new in db.news.find(
+            {"sources": {"$elemMatch": {"$regex": source, "$options": "i"}}}
+            ):
+        insert_title = new["title"], new["url"]
+        news.append(insert_title)
+    return news
 
 
 # Requisito 9
 def search_by_category(category):
-    """Seu código deve vir aqui"""
+    news = []
+    for new in db.news.find(
+        {"categories": {"$elemMatch": {"$regex": category, "$options": "i"}}}
+            ):
+        insert_title = new["title"], new["url"]
+        news.append(insert_title)
+    return news
